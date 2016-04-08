@@ -1,0 +1,57 @@
+
+# In order to to create pages it is necessary to define routes for them.
+# A route maps a URL path to a controller. It defines what function
+# or method will be called when a URL is accessed.
+# If the user accesses http://drupal8.dev/performance-tester/{entity_type}/generate/{count}, the routing
+# system will look for a route with that path. In this case it will find a
+# match, and execute the _controller callback. In this case the callback is
+# defined as a classname
+# ("\Drupal\performance_tester\Controller\TesterController")
+# and a method ("generate").
+performance_tester.node_tester_controller_generate:
+  path: 'performance-tester/{entity_type}/generate/{count}/{prefix}  '
+  defaults:
+    _controller: '\Drupal\performance_tester\Controller\TesterController::generate'
+    _title: 'generate'
+  requirements:
+    _permission: 'access content'
+# In order to to create pages it is necessary to define routes for them.
+# A route maps a URL path to a controller. It defines what function
+# or method will be called when a URL is accessed.
+# If the user accesses http://drupal8.dev/performance-tester/{entity_type}/{count}, the routing
+# system will look for a route with that path. In this case it will find a
+# match, and execute the _controller callback. In this case the callback is
+# defined as a classname
+# ("\Drupal\performance_tester\Controller\TesterController")
+# and a method ("read").
+performance_tester.node_tester_controller_read:
+  path: 'performance-tester/{entity_type}/{count}'
+  defaults:
+    _controller: '\Drupal\performance_tester\Controller\TesterController::read'
+    _title: 'Read'
+  requirements:
+    _permission: 'access content'
+# In order to to create pages it is necessary to define routes for them.
+# A route maps a URL path to a controller. It defines what function
+# or method will be called when a URL is accessed.
+# If the user accesses http://drupal8.dev/performance-tester/{entity_type}/view/{count}, the routing
+# system will look for a route with that path. In this case it will find a
+# match, and execute the _controller callback. In this case the callback is
+# defined as a classname
+# ("\Drupal\performance_tester\Controller\TesterController")
+# and a method ("view").
+performance_tester.node_tester_controller_view:
+  path: 'performance-tester/{entity_type}/view/{count}'
+  defaults:
+    _controller: '\Drupal\performance_tester\Controller\TesterController::view'
+    _title: 'View'
+  requirements:
+    _permission: 'access content'
+
+performance_tester.node_tester_controller_update:
+  path: 'performance-tester/{entity_type}/update/{count}'
+  defaults:
+    _controller: '\Drupal\performance_tester\Controller\TesterController::update'
+    _title: 'Update'
+  requirements:
+    _permission: 'access content'

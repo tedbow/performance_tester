@@ -1,0 +1,14 @@
+{
+  "name": "drupal/performance_tester",
+  "type": "drupal-module",
+  "description": "Test Performance",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/performance_tester",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "http://drupal.org/project/issues/performance_tester",
+    "source": "http://cgit.drupalcode.org/performance_tester"
+  },
+  "require": { }
+}

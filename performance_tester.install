@@ -1,0 +1,14 @@
+<?php
+
+use Drupal\user\Entity\Role;
+/**
+ * Implements hook_install().
+ */
+function performance_tester_install(){
+  $role = Role::load(Role::ANONYMOUS_ID);
+  $role->grantPermission("access user profiles");
+  $role->save();
+  $role = Role::load(Role::AUTHENTICATED_ID);
+  $role->grantPermission("access user profiles");
+  $role->save();
+}

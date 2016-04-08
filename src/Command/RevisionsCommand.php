@@ -87,6 +87,7 @@ class RevisionsCommand extends Command {
        $label_key = $entity->getEntityType()->getKey('label');
      }
      $entity->set($label_key, $label);
+     $entity->setNewRevision();
      $entity->save();
    }
 

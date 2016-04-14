@@ -78,15 +78,19 @@ class RevisionsCommand extends Command {
     $entity = $this->storage->load($id);
    for ($c = 0; $c < $count; $c++) {
      $label = $entity->label();
-     $parts = explode(':', $label);
-     $label = $parts[0] . ':' . $c;
-     if ($entity_type == 'user') {
-       $label_key = 'name';
+     // donot change user 1 name or sign script will not work
+     if (!($entity_type == 'user' && $id == 1)) {
+       $parts = explode(':', $label);
+       $label = $parts[0] . ':' . $c;
+       if ($entity_type == 'user') {
+         $label_key = 'name';
+       }
+       else {
+         $label_key = $entity->getEntityType()->getKey('label');
+       }
+       $entity->set($label_key, $label);
      }
-     else {
-       $label_key = $entity->getEntityType()->getKey('label');
-     }
-     $entity->set($label_key, $label);
+
      $entity->setNewRevision();
      $entity->save();
    }

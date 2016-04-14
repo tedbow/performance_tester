@@ -29,6 +29,11 @@ class RevisionsCommand extends Command {
    * @var EntityStorageInterface
    */
   protected $storage;
+
+  /**
+   * @var EntityTypeManagerInterface
+   */
+  protected $manager;
   /**
    * {@inheritdoc}
    */
@@ -53,8 +58,8 @@ class RevisionsCommand extends Command {
 
     $entity_type = $input->getArgument('entity_type');
     /** @var EntityTypeManagerInterface $manager */
-    $manager = \Drupal::service('entity_type.manager');
-    $this->storage = $manager->getStorage($entity_type);
+    $this->manager = \Drupal::service('entity_type.manager');
+    $this->storage = $this->manager->getStorage($entity_type);
 
     $count = $input->getOption('count');
     $results = $this->createAllRevisions($entity_type, $count);
@@ -63,37 +68,45 @@ class RevisionsCommand extends Command {
     $io->info("Revision created form $entity_type $count");
   }
 
-  protected function createAllRevisions($entity_type, $count) {
+  protected function createAllRevisions($entity_type_id, $count) {
 
     $query = $this->storage->getQuery();
     $ids = $query->execute();
+    if ($entity_type_id != 'user') {
+      $entity_type = $this->manager->getDefinition($entity_type_id);
+      $label_key = $entity_type->getKey('label');
+    }
+    else {
+      // why doesn't label key work for user?
+      $label_key = 'name';
+    }
+
     foreach ($ids as $id) {
-      $this->createRevisions($entity_type, $id, $count);
+      $this->createRevisions($entity_type_id, $id, $count, $label_key);
     }
 
   }
 
-  private function createRevisions($entity_type, $id, $count) {
+  private function createRevisions($entity_type_id, $id, $count, $label_key) {
     /** @var ContentEntityInterface $entity */
     $entity = $this->storage->load($id);
-   for ($c = 0; $c < $count; $c++) {
-     $label = $entity->label();
-     // donot change user 1 name or sign script will not work
-     if (!($entity_type == 'user' && $id == 1)) {
-       $parts = explode(':', $label);
-       $label = $parts[0] . ':' . $c;
-       if ($entity_type == 'user') {
-         $label_key = 'name';
-       }
-       else {
-         $label_key = $entity->getEntityType()->getKey('label');
-       }
-       $entity->set($label_key, $label);
-     }
+    $orig_label = $entity->label();
+    if (!($entity_type_id == 'user' && $id == 1)) {
+      for ($c = 0; $c < $count; $c++) {
+        $label = $orig_label . ':' . $c;
+        $entity->set($label_key, $label);
 
-     $entity->setNewRevision();
-     $entity->save();
-   }
+        $entity->setNewRevision();
+        $entity->save();
+      }
+    }
+    else {
+      for ($c = 0; $c < $count; $c++) {
+        // donot change user 1 name or sign in script will not work
+        $entity->setNewRevision();
+        $entity->save();
+      }
+    }
 
   }
 
